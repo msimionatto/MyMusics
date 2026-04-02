@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyMusics</title>
+    <link rel="shortcut icon" href="assets/Logo.ico" type="image/x-icon">
+    <link rel="icon" href="assets/Logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/Logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+<div class="sidebar">
+    <div class="brand-container" id="brandHome" style="cursor: pointer;">
+        <img src="../assets/Logo.png" alt="MyMusics Logo" class="software-logo">
+        <h1 class="brand-name">MyMusics</h1>
+                    <header class="main-header-info">
+        <div class="dev-badge">
+            <span class="version">v1.0</span>
+            <span class="dot">•</span>
+            <span class="author">Marcos Simionatto</span>
+            <span class="year">2026</span>
+        </div>
+    </header>
+    </div>
+
+            <button id="addMusicBtn">+ Adicionar Música</button>
+
+            <button id="btnAll">🎵 Todas</button>
+            <button id="btnFav">❤️ Favoritos</button>
+
+            <hr>
+            <p>Playlists</p>
+            <ul id="listaPlaylists"></ul>
+            <button id="btnNovaPlaylist">+ Nova Playlist</button>
+
+            <input type="text" id="search" placeholder="Buscar música...">
+        </div>
+
+        <div class="main" id="mainContent">
+    <div id="playlistHeader" class="playlist-details hidden">
+        <img id="detailCapa" src="assets/Logo1.png" style="width: 150px; height: 150px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+        
+        <div class="text-details">
+            <h1 id="detailNome" style="margin: 0; font-size: 2rem;">Nome da Playlist</h1>
+            <p id="detailDesc" style="color: #b3b3b3; margin: 10px 0;">Descrição da playlist...</p>
+            
+            <div class="playlist-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+                <button id="btnEditarPlaylist" title="Editar Playlist">✏️ Editar</button>
+                <button id="btnExcluirPlaylist" title="Excluir Playlist" class="btn-danger">🗑️ Excluir Playlist</button>
+            </div>
+        </div>
+    </div>
+
+    <ul id="lista" style="list-style: none; padding: 0; margin-top: 20px;">
+        </ul>
+</div>
+
+    </div>
+
+    <div id="popupPlaylist" class="popup hidden">
+        <div class="popup-content">
+            <h2>Criar Playlist</h2>
+            <input type="file" id="playlistImage" accept="image/*">
+            <input type="text" id="playlistName" placeholder="Nome da playlist">
+            <textarea id="playlistDesc" placeholder="Descrição"></textarea>
+            <div class="popup-buttons">
+                <button id="cancelar">Cancelar</button>
+                <button id="criar">Criar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="playerBar">
+    <div class="player-left" style="display: flex; align-items: center; gap: 12px;">
+        <img id="cover" src="../assets/Logo1.png" ...>
+        
+        <div>
+            <div id="musicTitle" style="font-weight: bold; font-size: 14px;">Nenhuma música</div>
+            <div id="musicArtist" style="font-size: 12px; color: #b3b3b3;">---</div>
+        </div>
+    </div>
+
+        <div class="player-center">
+            <div class="controls">
+                <button id="btnPrev">⏮</button>
+                <button id="btnBack">⏪</button>
+                <button id="btnTogglePlay">▶</button>
+                <button id="btnForward">⏩</button>
+                <button id="btnNext">⏭</button>
+            </div>
+
+            <div class="progress-container">
+                <span id="currentTime">0:00</span>
+                <input type="range" id="progress" min="0" max="100" value="0">
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+        
+        <div class="player-right">
+            <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+        </div>
+    </div>
+    <audio id="player"></audio>
+
+<script>
+    // --- CONFIGURAÇÕES ---
+    const IMG_PADRAO = "../assets/Logo1.png";
+    const IMG_FAVORITOS = "../assets/Favoritos.png";
+
+    // --- ELEMENTOS ---
+    const brandHome = document.getElementById("brandHome");
+    const btnAdd = document.getElementById("addMusicBtn");
+    const btnAll = document.getElementById("btnAll");
+    const btnFav = document.getElementById("btnFav");
+    const btnNovaPlaylist = document.getElementById("btnNovaPlaylist");
+
+    const popup = document.getElementById("popupPlaylist");
+    const btnCancelar = document.getElementById("cancelar");
+    const btnCriar = document.getElementById("criar");
+    const popupTitle = popup.querySelector("h2");
+
+    const lista = document.getElementById("lista");
+    const listaPlaylists = document.getElementById("listaPlaylists");
+    const mainContent = document.getElementById("mainContent");
+    const search = document.getElementById("search");
+
+    const playlistHeader = document.getElementById("playlistHeader");
+    const detailCapa = document.getElementById("detailCapa");
+    const detailNome = document.getElementById("detailNome");
+    const detailDesc = document.getElementById("detailDesc");
+    const btnEditarPlaylist = document.getElementById("btnEditarPlaylist");
+    const btnExcluirPlaylist = document.getElementById("btnExcluirPlaylist");
+
+    const player = document.getElementById("player");
+    const btnTogglePlay = document.getElementById("btnTogglePlay");
+    const btnBack = document.getElementById("btnBack"); 
+    const btnForward = document.getElementById("btnForward");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+
+    const volume = document.getElementById("volume");
+    const progress = document.getElementById("progress");
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationEl = document.getElementById("duration");
+
+    const cover = document.getElementById("cover");
+    const musicTitle = document.getElementById("musicTitle");
+    const musicArtist = document.getElementById("musicArtist");
+
+    // --- DADOS ---
+    let musicas = [];
+    let musicasFiltradas = [];
+    let playlists = {};
+    let playlistAtual = null;
+    let indexAtual = 0;
+    let modo = "todas";
+    let editandoPlaylist = null;
+
+    // --- PERSISTÊNCIA ---
+    async function salvarTudo() {
+        await window.api.salvarBiblioteca({
+            musicas,
+            playlists
+        });
+    }
+
+    // --- INTERFACE DE MÚSICAS ---
+    function renderizarLista(listaMusicas) {
+        lista.innerHTML = "";
+        listaMusicas.forEach((musica, index) => {
+            const li = document.createElement("li");
+            const nomeLimpo = musica.nome.replace(".mp3", "").replace(".wav", "");
+            const heart = musica.favorito ? "❤️" : "🤍";
+
+            const btnRemoverPl = (modo === "playlist")
+                ? `<span class="remove-from-pl" style="cursor:pointer; font-size:10px;" title="Remover da Playlist">❌</span>`
+                : "";
+
+            li.innerHTML = `
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="track-number" style="color: #b3b3b3; min-width: 25px;">${index + 1}</span>
+                    <span>${nomeLimpo}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <span class="duracao-item">${musica.duracao || "--:--"}</span>
+                    <span class="heart" style="cursor:pointer;">${heart}</span>
+                    <span class="add-to-pl" style="cursor:pointer; font-size:12px;">➕</span>
+                    ${btnRemoverPl}
+                </div>
+            `;
+
+            if (musicasFiltradas[indexAtual] === musica) {
+                li.classList.add("active");
+            }
+
+            li.onclick = (e) => {
+                const classesIgnorar = ['heart', 'add-to-pl', 'remove-from-pl'];
+                if (classesIgnorar.some(cls => e.target.classList.contains(cls))) return;
+
+                indexAtual = musicasFiltradas.indexOf(musica);
+                tocarMusica();
+                renderizarLista(musicasFiltradas);
+            };
+
+            li.querySelector(".heart").onclick = async (e) => {
+                e.stopPropagation();
+                musica.favorito = !musica.favorito;
+                await salvarTudo();
+                aplicarFiltro();
+            };
+
+            li.querySelector(".add-to-pl").onclick = (e) => {
+                e.stopPropagation();
+                abrirMenuPlaylist(e, musica);
+            };
+
+            if (modo === "playlist") {
+                li.querySelector(".remove-from-pl").onclick = async (e) => {
+                    e.stopPropagation();
+                    const pl = playlists[playlistAtual];
+                    pl.musicas = pl.musicas.filter(caminho => caminho !== musica.caminho);
+                    await salvarTudo();
+                    aplicarFiltro();
+                };
+            }
+
+            li.oncontextmenu = async (e) => {
+                e.preventDefault();
+                if (!confirm("Remover música da biblioteca?")) return;
+                musicas = musicas.filter(m => m !== musica);
+                await salvarTudo();
+                aplicarFiltro();
+            };
+
+            lista.appendChild(li);
+        });
+    }
+
+    // --- PLAYLISTS ---
+    function abrirMenuPlaylist(event, musica) {
+        document.querySelectorAll(".playlist-menu").forEach(m => m.remove());
+        const menu = document.createElement("div");
+        menu.className = "playlist-menu";
+        menu.style.top = `${event.clientY}px`;
+        menu.style.left = `${event.clientX - 180}px`;
+
+        const nomesPlaylists = Object.keys(playlists);
+        if (nomesPlaylists.length === 0) {
+            menu.innerHTML = "<small style='padding:10px; display:block;'>Crie uma playlist primeiro</small>";
+        } else {
+            nomesPlaylists.forEach(nomePl => {
+                const item = document.createElement("div");
+                item.className = "menu-item";
+                const jaEstaNaPlaylist = playlists[nomePl].musicas.includes(musica.caminho);
+                
+                if (jaEstaNaPlaylist) {
+                    item.style.backgroundColor = "#28a745"; 
+                    item.style.color = "white";
+                    item.innerHTML = `<span>✅ ${nomePl}</span>`;
+                } else {
+                    item.innerHTML = `<span>➕ ${nomePl}</span>`;
+                }
+
+                item.onclick = async (e) => {
+                    e.stopPropagation();
+                    if (jaEstaNaPlaylist) {
+                        playlists[nomePl].musicas = playlists[nomePl].musicas.filter(c => c !== musica.caminho);
+                    } else {
+                        playlists[nomePl].musicas.push(musica.caminho);
+                    }
+                    await salvarTudo();
+                    menu.remove();
+                    aplicarFiltro();
+                };
+                menu.appendChild(item);
+            });
+        }
+        document.body.appendChild(menu);
+        setTimeout(() => { 
+            const fechar = () => { menu.remove(); window.removeEventListener('click', fechar); };
+            window.addEventListener('click', fechar);
+        }, 10);
+    }
+
+    function renderizarPlaylists() {
+        listaPlaylists.innerHTML = "";
+        Object.values(playlists).forEach(pl => {
+            const li = document.createElement("li");
+            li.className = "item-playlist-sidebar";
+            const capaSrc = pl.capa || IMG_PADRAO;
+            li.innerHTML = `<img src="${capaSrc}" width="24" height="24" style="border-radius:4px; object-fit:cover;"> <span>${pl.nome}</span>`;
+            li.onclick = () => {
+                modo = "playlist";
+                playlistAtual = pl.nome;
+                search.value = "";
+                aplicarFiltro();
+            };
+            listaPlaylists.appendChild(li);
+        });
+    }
+
+    function aplicarFiltro() {
+        const termo = search.value.toLowerCase();
+        if (modo === "playlist" && playlistAtual && playlists[playlistAtual]) {
+            const pl = playlists[playlistAtual];
+            playlistHeader.classList.remove("hidden");
+            detailNome.textContent = pl.nome;
+            detailDesc.textContent = pl.descricao || "Sem descrição";
+            detailCapa.src = pl.capa || IMG_PADRAO;
+            musicasFiltradas = musicas.filter(m => pl.musicas.includes(m.caminho));
+        } else {
+            playlistHeader.classList.add("hidden");
+            musicasFiltradas = (modo === "favoritos") ? musicas.filter(m => m.favorito) : [...musicas];
+        }
+        musicasFiltradas = musicasFiltradas.filter(m => m.nome.toLowerCase().includes(termo));
+        renderizarLista(musicasFiltradas);
+    }
+
+    async function tocarMusica() {
+        const musica = musicasFiltradas[indexAtual];
+        if (!musica) return;
+
+        player.src = musica.caminho;
+        player.play();
+
+        musicTitle.textContent = musica.nome.replace(".mp3", "").replace(".wav", "");
+        const metadata = await window.api.lerMetadata(musica.caminho);
+
+        if (modo === "playlist" && playlistAtual) {
+            const pl = playlists[playlistAtual];
+            cover.src = pl.capa || IMG_PADRAO;
+            musicArtist.textContent = "Playlist: " + pl.nome;
+        } 
+        else if (modo === "favoritos") {
+            cover.src = IMG_FAVORITOS; 
+            musicArtist.textContent = metadata?.artist || "Meus Favoritos";
+        } 
+        else {
+            if (metadata && metadata.picture) {
+                musicArtist.textContent = metadata.artist || "Desconhecido";
+                cover.src = `data:${metadata.picture.format};base64,${metadata.picture.data}`;
+            } else {
+                musicArtist.textContent = metadata?.artist || "Desconhecido";
+                cover.src = IMG_PADRAO;
+            }
+        }
+    }
+
+    // --- NAVEGAÇÃO ---
+    brandHome.onclick = () => {
+        modo = "todas";
+        playlistAtual = null;
+        search.value = "";
+        cover.src = IMG_PADRAO;
+        aplicarFiltro();
+    };
+
+    btnAll.onclick = () => { 
+        modo = "todas"; 
+        cover.src = IMG_PADRAO;
+        aplicarFiltro(); 
+    };
+
+    btnFav.onclick = () => { 
+        modo = "favoritos"; 
+        aplicarFiltro(); 
+    };
+
+    // --- POPUP PLAYLIST ---
+    btnNovaPlaylist.onclick = () => {
+        editandoPlaylist = null;
+        popupTitle.textContent = "Criar Playlist";
+        btnCriar.textContent = "Criar";
+        limparCamposPopup();
+        popup.classList.remove("hidden");
+    };
+
+    btnEditarPlaylist.onclick = () => {
+        const pl = playlists[playlistAtual];
+        editandoPlaylist = playlistAtual;
+        popupTitle.textContent = "Editar Playlist";
+        btnCriar.textContent = "Salvar Alterações";
+        document.getElementById("playlistName").value = pl.nome;
+        document.getElementById("playlistDesc").value = pl.descricao || "";
+        popup.classList.remove("hidden");
+    };
+
+    btnCancelar.onclick = () => popup.classList.add("hidden");
+
+    btnCriar.onclick = async () => {
+        const nome = document.getElementById("playlistName").value;
+        const desc = document.getElementById("playlistDesc").value;
+        const file = document.getElementById("playlistImage").files[0];
+        if (!nome) return alert("Dê um nome à playlist");
+
+        let capa = editandoPlaylist ? playlists[editandoPlaylist].capa : null;
+        if (file) capa = await toBase64(file);
+
+        if (editandoPlaylist) {
+            const musicasDaPl = playlists[editandoPlaylist].musicas;
+            if (editandoPlaylist !== nome) delete playlists[editandoPlaylist];
+            playlists[nome] = { nome, descricao: desc, capa, musicas: musicasDaPl };
+            playlistAtual = nome;
+        } else {
+            playlists[nome] = { nome, descricao: desc, capa, musicas: [] };
+        }
+
+        await salvarTudo();
+        renderizarPlaylists();
+        aplicarFiltro();
+        popup.classList.add("hidden");
+    };
+
+    function limparCamposPopup() {
+        document.getElementById("playlistName").value = "";
+        document.getElementById("playlistDesc").value = "";
+        document.getElementById("playlistImage").value = "";
+    }
+
+    btnExcluirPlaylist.onclick = async () => {
+        if (!confirm(`Excluir a playlist "${playlistAtual}"?`)) return;
+        delete playlists[playlistAtual];
+        await salvarTudo();
+        modo = "todas";
+        renderizarPlaylists();
+        aplicarFiltro();
+    };
+
+    // --- CONTROLES DO PLAYER ---
+    player.ontimeupdate = () => {
+        if (!player.duration) return;
+        progress.value = (player.currentTime / player.duration) * 100;
+        currentTimeEl.textContent = formatarTempo(player.currentTime);
+    };
+
+    player.onloadedmetadata = () => durationEl.textContent = formatarTempo(player.duration);
+    progress.oninput = () => player.currentTime = (progress.value / 100) * player.duration;
+    
+    btnTogglePlay.onclick = () => player.paused ? player.play() : player.pause();
+    player.onplay = () => btnTogglePlay.textContent = "⏸";
+    player.onpause = () => btnTogglePlay.textContent = "▶";
+    
+    if(btnBack) btnBack.onclick = () => player.currentTime -= 10;
+    if(btnForward) btnForward.onclick = () => player.currentTime += 10;
+    
+    btnNext.onclick = () => {
+        if (musicasFiltradas.length === 0) return;
+        indexAtual = (indexAtual + 1) % musicasFiltradas.length;
+        tocarMusica();
+        renderizarLista(musicasFiltradas);
+    };
+    
+    btnPrev.onclick = () => {
+        if (musicasFiltradas.length === 0) return;
+        indexAtual = (indexAtual - 1 + musicasFiltradas.length) % musicasFiltradas.length;
+        tocarMusica();
+        renderizarLista(musicasFiltradas);
+    };
+    
+    player.onended = () => btnNext.click();
+    volume.oninput = () => player.volume = volume.value;
+    search.oninput = aplicarFiltro;
+
+    btnAdd.onclick = async () => {
+        const musicasNovas = await window.api.selecionarMusica();
+        musicasNovas.forEach(nova => {
+            if (!musicas.find(m => m.caminho === nova.caminho)) {
+                musicas.push(nova);
+            }
+        });
+        await salvarTudo();
+        aplicarFiltro();
+    };
+
+    // --- UTILITÁRIOS ---
+    function formatarTempo(s) {
+        if (!s || isNaN(s)) return "0:00";
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return `${m}:${sec < 10 ? "0" + sec : sec}`;
+    }
+
+    function toBase64(file) {
+        return new Promise((res) => {
+            const reader = new FileReader();
+            reader.onload = () => res(reader.result);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function carregar() {
+        const db = await window.api.carregarBiblioteca();
+        musicas = db.musicas || [];
+        playlists = db.playlists || {};
+        renderizarPlaylists();
+        aplicarFiltro();
+    }
+
+    window.api.onBibliotecaAtualizada((novoDb) => {
+        musicas = novoDb.musicas || [];
+        playlists = novoDb.playlists || {};
+        aplicarFiltro();
+    });
+
+    carregar();
+</script>
+
+</body>
+
+</html>

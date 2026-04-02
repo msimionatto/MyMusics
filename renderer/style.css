@@ -1,0 +1,2112 @@
+/* ============================================================
+   SISTEMA DE DESIGN - VARIÁVEIS DE ELITE (V2.0)
+   ============================================================ */
+:root {
+    /* Cores de Identidade */
+    --brand-primary: #1db954;
+    --brand-glow: rgba(29, 185, 84, 0.4);
+    --brand-gradient: linear-gradient(135deg, #1db954 0%, #158a3d 100%);
+    
+    /* Superfícies e Backgrounds */
+    --bg-dark: #050505; /* Um preto mais profundo para contraste infinito */
+    --bg-main: #0a0a0a;
+    
+    /* Glassmorphism Puro */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-bg-hover: rgba(255, 255, 255, 0.07);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --blur-intensity: blur(12px);
+    
+    /* Tipografia e Feedback */
+    --text-main: #ffffff;
+    --text-muted: #a7a7a7;
+    --text-dim: #727272;
+    
+    /* Estrutura */
+    --player-height: 105px;
+    --sidebar-width: 280px;
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    
+    /* Animações de Elite */
+    --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --shadow-soft: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* RESET E BASE DO SISTEMA */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased; /* Deixa as fontes mais nítidas no Electron */
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden; /* Evita scroll duplo na janela principal */
+    height: 100vh;
+    user-select: none; /* Evita que o usuário "selecione" textos da interface como se fosse um site */
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-dim);
+}
+
+/* ============================================================
+   RESET & FOUNDATION - THE GLASS CHASSIS (REFINED)
+   ============================================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    /* Melhora a legibilidade e remove artefatos de renderização */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-dark);
+    /* Gradiente dinâmico imersivo: Iluminação de estúdio com profundidade */
+    background: 
+        radial-gradient(circle at 15% 20%, rgba(29, 185, 84, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(29, 185, 84, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, #121212 0%, #050505 100%);
+    background-attachment: fixed;
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    user-select: none;
+}
+
+/* LAYOUT PRINCIPAL - ESTRUTURA FLUTUANTE */
+.container {
+    display: flex;
+    /* Usa a variável do player para garantir que nada se sobreponha */
+    height: calc(100vh - var(--player-height)); 
+    width: 100%;
+    position: relative;
+    padding: 16px; /* Aumentado levemente para destacar o efeito 'floating' */
+    gap: 16px;
+    /* Animação de entrada suave e cinematográfica */
+    animation: appReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity, filter;
+}
+
+@keyframes appReveal {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px) scale(0.97);
+        filter: blur(15px) brightness(0.4);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+        filter: blur(0) brightness(1);
+    }
+}
+
+/* EFEITO DE VIDRO - GLASS PANEL 2.0 */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px) saturate(180%); /* Saturação aumentada para brilho premium */
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Sombra para destacar do fundo */
+    transition: var(--transition-smooth);
+    overflow: hidden; /* Garante que o conteúdo respeite o border-radius */
+}
+
+.glass-panel:hover {
+    border-color: rgba(29, 185, 84, 0.2); /* Brilho verde sutil no hover do painel */
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* CUSTOM SCROLLBAR - DESIGN DE PISTA */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.03); /* Borda na scrollbar para polimento */
+    transition: var(--transition-smooth);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-primary);
+    box-shadow: 0 0 15px var(--brand-glow);
+}
+
+/* REFINAMENTO TIPOGRÁFICO */
+h1, h2, h3 {
+    letter-spacing: -0.04em;
+    font-weight: 800; /* Extra bold para headers */
+    background: linear-gradient(to bottom, #fff, #aaa); /* Gradiente sutil no texto */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.main p, .main span, #musicTitle {
+    user-select: text; /* Permite copiar nomes de músicas */
+    letter-spacing: -0.015em;
+    color: var(--text-muted);
+}
+
+/* ELEMENTOS INTERATIVOS */
+.interactive-item {
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.interactive-item:active {
+    transform: scale(0.95); /* Feedback tátil de clique */
+}
+
+/* ============================================================
+   SIDEBAR REFINADA - THE COMMAND CENTER (ULTRA-PREMIUM)
+   ============================================================ */
+
+.sidebar {
+    width: 280px;
+    background: rgba(5, 5, 5, 0.4); /* Reduzi a opacidade para o gradiente do body brilhar através */
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    padding: 30px 20px; /* Ajuste leve no respiro lateral */
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--glass-border); 
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 15px 0 50px rgba(0, 0, 0, 0.6);
+}
+
+/* BRANDING - LOGO & SOFTWARE NAME */
+.brand-container {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 45px;
+    padding: 10px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.brand-container:hover {
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateY(-2px);
+}
+
+.software-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    /* Glow pulsante sutil */
+    filter: drop-shadow(0 0 8px rgba(29, 185, 84, 0.4));
+    transition: var(--transition-smooth);
+}
+
+.brand-container:hover .software-logo {
+    filter: drop-shadow(0 0 15px var(--brand-primary));
+    transform: rotate(-5deg); /* Pequeno charme na logo */
+}
+
+.brand-name {
+    font-size: 22px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+    /* Gradiente Cromado/Esmeralda */
+    background: linear-gradient(180deg, #ffffff 0%, #1db954 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 10px rgba(29, 185, 84, 0.2));
+}
+
+/* RÓTULOS DE SEÇÃO - MINIMALISTAS */
+.sidebar p {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-dim); 
+    margin: 35px 0 15px 12px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    opacity: 0.6;
+}
+
+/* NAVEGAÇÃO - LINKS E BOTÕES */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+    border: 1px solid transparent;
+}
+
+.sidebar-item:hover {
+    color: var(--text-main);
+    background: var(--glass-bg-hover);
+    transform: translateX(10px);
+    border-color: var(--glass-border);
+}
+
+.sidebar-item.active {
+    background: rgba(29, 185, 84, 0.15);
+    color: var(--brand-primary);
+    font-weight: 700;
+    /* Indicador lateral sem mover o layout */
+    box-shadow: inset 4px 0 0 var(--brand-primary), 
+                0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ICONES DENTRO DA SIDEBAR (Se você usar) */
+.sidebar-item i, .sidebar-item span.icon {
+    margin-right: 12px;
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+/* DIVISOR (HR) - LINHA DE LUZ NEON */
+.sidebar hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.08) 50%, 
+        transparent
+    );
+    margin: 30px 0;
+    width: 90%;
+    align-self: center;
+}
+
+/* FOOTER DA SIDEBAR (Opcional, para versão/ajustes) */
+.sidebar-footer {
+    margin-top: auto;
+    padding: 15px;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: center;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* ============================================================
+   SIDEBAR NAVIGATION - THE COMMAND CENTER (REFINED 2026)
+   ============================================================ */
+
+.sidebar button {
+    width: 100%;
+    padding: 12px 18px;
+    margin-bottom: 8px; /* Aumentado levemente para melhor escaneamento */
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted); 
+    cursor: pointer;
+    border-radius: var(--radius-md); 
+    font-weight: 600;
+    font-size: 14px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    outline: none;
+    
+    /* Transição ultra-fluida com elasticidade 2026 */
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efeito de Hover: Iluminação por Camadas */
+.sidebar button:hover {
+    background: var(--glass-bg-hover);
+    color: var(--text-main);
+    transform: translateX(8px);
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 
+        inset 0 1px 1px rgba(255, 255, 255, 0.05),
+        0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* O Indicador Neon - Evoluído */
+.sidebar button::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 4px;
+    height: 0; 
+    background: var(--brand-primary);
+    border-radius: 0 4px 4px 0;
+    transition: height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 0px var(--brand-glow);
+}
+
+.sidebar button:hover::before {
+    height: 24px;
+    box-shadow: 0 0 15px var(--brand-primary);
+}
+
+/* BOTÃO ADICIONAR MÚSICA - THE POWER BUTTON (REMASTERED) */
+#addMusicBtn {
+    background: var(--brand-gradient);
+    color: #000;
+    margin: 20px 0 35px 0;
+    justify-content: center;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    height: 54px;
+    border: none;
+    border-radius: var(--radius-md);
+    box-shadow: 
+        0 4px 15px rgba(29, 185, 84, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    position: relative;
+    z-index: 1;
+    transition: var(--transition-smooth);
+}
+
+/* Efeito de Reflexo de Luz (Glossy) */
+#addMusicBtn::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+#addMusicBtn:hover {
+    background: #1ed760;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 
+        0 15px 35px rgba(29, 185, 84, 0.45),
+        0 0 0 4px rgba(29, 185, 84, 0.15);
+}
+
+#addMusicBtn:hover::after {
+    opacity: 1;
+    /* Movimento sutil do brilho ao passar o mouse */
+    animation: shineMove 2s infinite linear;
+}
+
+@keyframes shineMove {
+    from { transform: translate(-30%, -30%); }
+    to { transform: translate(10%, 10%); }
+}
+
+#addMusicBtn:active {
+    transform: translateY(-2px) scale(0.97);
+    filter: brightness(0.85);
+}
+
+/* Refino dos Ícones */
+.sidebar button i, .sidebar button svg {
+    font-size: 20px; /* Um pouco maior para destaque */
+    opacity: 0.6;
+    transition: var(--transition-smooth);
+    color: inherit;
+}
+
+.sidebar button:hover i, .sidebar button:hover svg {
+    opacity: 1;
+    transform: scale(1.15) rotate(-5deg); /* Leve inclinação para estilo */
+    filter: drop-shadow(0 0 5px var(--brand-glow));
+}
+
+/* ============================================================
+   PLAYLISTS SECTION - THE ARCHIVE (MODERN 2026 REFINED)
+   ============================================================ */
+
+/* Lista de Músicas (Geral) */
+#lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    transition: var(--transition-smooth);
+    border: 1px solid transparent;
+    margin-bottom: 4px;
+}
+
+#lista li:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border);
+    transform: scale(1.005);
+}
+
+/* Números das faixas - Estilo "Data-Center" */
+.track-number {
+    display: inline-block;
+    width: 28px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace; /* Fonte técnica */
+    font-weight: 500;
+}
+
+.duracao-item {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-right: 15px;
+    min-width: 45px;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Container das Playlists na Sidebar */
+#listaPlaylists {
+    max-height: 380px; 
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 15px;
+    padding-right: 6px;
+    /* Fade suave no topo e fundo para indicar scroll */
+    mask-image: linear-gradient(to bottom, 
+        transparent 0%, 
+        black 10%, 
+        black 90%, 
+        transparent 100%
+    );
+}
+
+/* Itens da Playlist */
+#listaPlaylists li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: transparent;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    border: 1px solid transparent;
+}
+
+/* Capas das Playlists - Efeito de Profundidade */
+#listaPlaylists li img {
+    width: 42px; 
+    height: 42px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: var(--transition-smooth);
+    filter: brightness(0.8) contrast(1.1);
+}
+
+/* Efeito Hover Ultra-Premium */
+#listaPlaylists li:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-main);
+    padding-left: 14px;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+#listaPlaylists li:hover img {
+    transform: scale(1.1) rotate(-3deg);
+    filter: brightness(1) contrast(1.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 
+                0 0 10px rgba(29, 185, 84, 0.2); /* Glow sutil na borda da capa */
+}
+
+/* Estado Ativo - Destaque Neon */
+#listaPlaylists li.active {
+    background: rgba(29, 185, 84, 0.08);
+    color: var(--brand-primary);
+    border-left: 3px solid var(--brand-primary);
+    font-weight: 700;
+}
+
+/* Truncate inteligente para nomes longos */
+#listaPlaylists li span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+/* Scrollbar Fantasma */
+#listaPlaylists::-webkit-scrollbar {
+    width: 3px;
+}
+
+#listaPlaylists::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0);
+    border-radius: 10px;
+    transition: background 0.5s ease;
+}
+
+#listaPlaylists:hover::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================
+   BARRA DE BUSCA - PRECISÃO NEOMÓRFICA (REFINED 2026)
+   ============================================================ */
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 450px;
+    perspective: 1000px;
+    z-index: 10; /* Garante que a expansão fique sobre outros elementos */
+}
+
+#search {
+    width: 100%;
+    padding: 14px 20px 14px 52px; /* Ajuste no padding para o ícone respirar */
+    border-radius: 50px; 
+    border: 1px solid var(--glass-border); 
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(15px) saturate(160%);
+    -webkit-backdrop-filter: blur(15px) saturate(160%);
+    color: var(--text-main);
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    
+    /* Transição ultra-elástica */
+    transition: var(--transition-smooth);
+    
+    /* Neomorfismo Inverso (Cavidade Premium) */
+    box-shadow: 
+        inset 0 4px 10px rgba(0, 0, 0, 0.4),
+        0 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+/* ÍCONE DE BUSCA - REAÇÃO À LUZ */
+.search-container::before {
+    content: '🔍'; 
+    position: absolute;
+    left: 20px;
+    font-size: 16px;
+    opacity: 0.3;
+    filter: grayscale(1) brightness(2); /* Estilo monocromático limpo */
+    transition: var(--transition-smooth);
+    pointer-events: none;
+    z-index: 2;
+}
+
+#search::placeholder {
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    font-weight: 400;
+}
+
+/* --- ESTADOS DE INTERAÇÃO --- */
+
+#search:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 
+        inset 0 4px 12px rgba(0, 0, 0, 0.5),
+        0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.search-container:hover::before {
+    opacity: 0.6;
+    transform: scale(1.1) rotate(-5deg);
+}
+
+#search:focus {
+    background: rgba(10, 10, 10, 0.85); /* Escurece para foco total */
+    border-color: var(--brand-primary); 
+    width: 110%; /* Expansão levemente maior para impacto */
+    transform: translateX(-5%); 
+    padding-left: 56px;
+    
+    /* Glow de Foco Profissional */
+    box-shadow: 
+        0 0 0 4px rgba(29, 185, 84, 0.15), 
+        0 25px 50px rgba(0, 0, 0, 0.7),    
+        inset 0 0 10px rgba(29, 185, 84, 0.1); 
+    
+    animation: searchPulse 3s infinite ease-in-out;
+}
+
+/* Transformação do Ícone no Foco */
+.search-container:focus-within::before {
+    opacity: 1;
+    filter: grayscale(0) drop-shadow(0 0 8px var(--brand-primary));
+    transform: scale(1.2) translateX(2px);
+}
+
+/* Keyframes de Pulsação de Energia */
+@keyframes searchPulse {
+    0% { box-shadow: 0 0 0 4px rgba(29, 185, 84, 0.1), 0 25px 50px rgba(0, 0, 0, 0.7); }
+    50% { box-shadow: 0 0 0 8px rgba(29, 185, 84, 0.2), 0 30px 60px rgba(0, 0, 0, 0.8); }
+    100% { box-shadow: 0 0 0 4px rgba(29, 185, 84, 0.1), 0 25px 50px rgba(0, 0, 0, 0.7); }
+}
+
+/* Efeito de carregamento/limpeza (X) se você adicionar o botão depois */
+#search::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>') no-repeat center;
+    cursor: pointer;
+    opacity: 0.5;
+    margin-right: 10px;
+}
+
+/* ============================================================
+   ÁREA PRINCIPAL - ATMOSPHERIC GALLERY (NÍVEL 2026 PREMIUM)
+   ============================================================ */
+
+.main {
+    flex: 1;
+    /* Espaçamento inteligente que respira com a janela */
+    padding: clamp(32px, 5vw, 64px) clamp(24px, 4vw, 48px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    
+    /* Gradiente Multi-camadas (Iluminação de Estúdio 2.0) */
+    background: 
+        radial-gradient(circle at 0% 0%, rgba(29, 185, 84, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 30%),
+        radial-gradient(circle at 50% 50%, rgba(10, 10, 10, 0.5) 0%, #050505 100%);
+    background-color: #080808;
+    
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Aumentado para dar mais "ar" entre seções */
+    
+    /* Sombra de oclusão contra a Sidebar */
+    box-shadow: inset 30px 0 80px -30px rgba(0, 0, 0, 0.9);
+    
+    /* Otimização de Performance */
+    will-change: scroll-position;
+    -webkit-overflow-scrolling: touch;
+    
+    animation: mainFadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes mainFadeIn {
+    0% { 
+        opacity: 0; 
+        transform: scale(0.98) translateY(20px);
+        filter: brightness(0.4) blur(12px);
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1) translateY(0);
+        filter: brightness(1) blur(0);
+    }
+}
+
+/* TÍTULOS DE IMPACTO - TIPOGRAFIA DINÂMICA */
+.main h1, .main h2 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 950; /* Ultra black para máximo impacto */
+    letter-spacing: -0.05em;
+    color: #ffffff;
+    margin-bottom: 12px;
+    
+    /* Gradiente Vertical de Profundidade */
+    background: linear-gradient(180deg, #ffffff 30%, rgba(255, 255, 255, 0.5) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+}
+
+/* SUBTÍTULOS - THE SUB-TEXT */
+.main .section-desc {
+    font-size: 15px;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-top: -32px; 
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+    opacity: 0.7;
+}
+
+/* GRID DE CONTEÚDO - LAYOUT ADAPTÁVEL */
+.content-grid {
+    display: grid;
+    /* Ajuste fino no minmax para os cards não ficarem gigantes em telas grandes */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 32px;
+    perspective: 1000px;
+}
+
+/* SCROLLBAR REFINADA - "STEALTH MODE" (MELHORADA) */
+.main::-webkit-scrollbar {
+    width: 8px;
+}
+
+.main::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.main::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    border: 2px solid transparent; 
+    background-clip: content-box;
+    transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main:hover::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.main::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-primary);
+    box-shadow: 0 0 20px var(--brand-glow);
+}
+
+/* FOOTER - COPYRIGHT & BRANDING */
+.main-footer {
+    margin-top: 60px;
+    padding: 40px 0;
+    border-top: 1px solid var(--glass-border);
+    text-align: center;
+}
+
+.main-footer p {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+
+/* ============================================================
+   LISTA DE MÚSICAS - THE ELITE PLAYLIST (REFINED 2026)
+   ============================================================ */
+
+ul { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0;
+}
+
+.main li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px; /* Aumentado para mais conforto visual */
+    border-radius: var(--radius-md); 
+    margin-bottom: 6px;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid transparent;
+    
+    /* Transição Cinética */
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    
+    /* Otimização de renderização */
+    will-change: transform, background, border-color;
+}
+
+/* Efeito Hover: Deslizamento e Brilho de Borda */
+.main li:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border);
+    transform: translateX(12px); /* Deslizamento elegante */
+    box-shadow: 
+        -20px 0 40px -15px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ESTADO ATIVO (Tocando Agora) - THE NEON PULSE */
+.main li.active {
+    background: linear-gradient(90deg, rgba(29, 185, 84, 0.12) 0%, transparent 100%);
+    color: var(--brand-primary);
+    border-left: 4px solid var(--brand-primary);
+    box-shadow: inset 15px 0 30px -15px rgba(29, 185, 84, 0.2);
+    /* Animação que faz a linha lateral "respirar" */
+    animation: activePulse 2.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes activePulse {
+    0%, 100% { border-left-width: 4px; filter: brightness(1); opacity: 1; }
+    50% { border-left-width: 6px; filter: brightness(1.4); opacity: 0.8; }
+}
+
+/* Estrutura Interna */
+.main li .song-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    z-index: 2;
+}
+
+/* Título da Música */
+.main li .song-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--text-main);
+    transition: var(--transition-smooth);
+}
+
+/* Nome do Artista (Subtexto) */
+.main li .artist-name {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-weight: 400;
+    margin-left: 4px;
+    opacity: 0.6;
+    transition: var(--transition-smooth);
+}
+
+.main li:hover .artist-name {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
+/* ÍCONE DE PLAY NO HOVER - O INDICADOR CINÉTICO */
+.main li::before {
+    content: '▶';
+    position: absolute;
+    left: -25px;
+    font-size: 12px;
+    color: var(--brand-primary);
+    transition: var(--transition-smooth);
+    opacity: 0;
+    filter: drop-shadow(0 0 8px var(--brand-glow));
+}
+
+.main li:hover::before {
+    left: 8px;
+    opacity: 1;
+}
+
+/* DURAÇÃO - PRECISAO MONOESPACADA */
+.main li .duration {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    opacity: 0.4;
+    transition: var(--transition-smooth);
+}
+
+.main li:hover .duration {
+    color: var(--brand-primary);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Efeito de Reflexo (Sweep) ao passar o mouse */
+.main li::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+    transition: 0.6s;
+    pointer-events: none;
+}
+
+.main li:hover::after {
+    left: 100%;
+}
+
+/* ============================================================
+   PLAYER INFERIOR - ULTRA-PREMIUM GLASS CONSOLE (REFINED 2026)
+   ============================================================ */
+
+#playerBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--player-height); /* Usando sua variável de elite */
+    
+    /* Vidro de Alta Densidade: Profundidade e Claridade */
+    background: linear-gradient(
+        180deg, 
+        rgba(255, 255, 255, 0.04) 0%, 
+        rgba(5, 5, 5, 0.92) 100%
+    ); 
+    backdrop-filter: blur(40px) saturate(220%); /* Blur mais intenso para isolar o player */
+    -webkit-backdrop-filter: blur(40px) saturate(220%);
+    
+    /* Borda de Cristal Iluminada */
+    border-top: 1px solid var(--glass-border);
+    padding: 0 45px;
+    
+    display: grid;
+    grid-template-columns: 320px 1fr 320px;
+    align-items: center;
+    z-index: 1000;
+    
+    /* Sombra de Elevação Atmosférica */
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.9);
+}
+
+/* --- LADO ESQUERDO: INFO DA MÚSICA --- */
+.player-left {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    transition: var(--transition-smooth);
+}
+
+/* CAPA DO ÁLBUM - THE ARTISTIC HUB */
+#cover {
+    width: 72px; 
+    height: 72px;
+    border-radius: 14px; 
+    object-fit: cover;
+    /* Profundidade 3D com luz de borda */
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(255, 255, 255, 0.08); 
+    transition: var(--transition-smooth);
+    will-change: transform, box-shadow;
+}
+
+#cover:hover {
+    transform: scale(1.18) translateY(-8px) rotate(-3deg);
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.8),
+        0 0 25px var(--brand-glow);
+    cursor: pointer;
+}
+
+/* TEXTOS DA MÚSICA - TIPOGRAFIA DE PRECISÃO */
+.music-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 200px; /* Previne invasão no centro */
+}
+
+#musicTitle {
+    font-size: 16px;
+    font-weight: 850;
+    color: var(--text-main);
+    margin-bottom: 2px;
+    letter-spacing: -0.03em;
+    /* Truncate inteligente */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+#musicArtist {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    width: fit-content;
+}
+
+#musicArtist:hover {
+    color: var(--brand-primary);
+    transform: translateX(2px);
+    opacity: 1;
+}
+
+/* INDICADOR DE REPRODUÇÃO - O PULSO DO SOFTWARE */
+.playing-indicator {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    height: 14px;
+    margin-left: 12px;
+}
+
+.playing-indicator span {
+    width: 3px;
+    border-radius: 4px;
+    background: var(--brand-primary);
+    animation: barBounce 0.8s infinite ease-in-out alternate;
+}
+
+/* Diferentes durações para as barras do equalizador parecerem reais */
+.playing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.playing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes barBounce {
+    from { height: 4px; opacity: 0.6; }
+    to { height: 14px; opacity: 1; }
+}
+
+/* AJUSTE PARA O CENTRO (CONTROLES) - Só para garantir o alinhamento */
+.player-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* ============================================================
+   CONTROLES CENTRAIS - THE CORE ESSENCE (REFINED 2026)
+   ============================================================ */
+
+.player-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 650px; /* Um pouco mais de fôlego para o centro */
+    justify-content: center;
+    z-index: 10;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: clamp(20px, 4vw, 36px); /* Gap otimizado para não "embolar" */
+    margin-bottom: 14px;
+}
+
+.controls button {
+    background: transparent;
+    border: none;
+    color: var(--text-dim); 
+    font-size: 22px; /* Padronizado para ícones modernos */
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    will-change: transform, color;
+}
+
+/* Hover nos botões secundários (Skip, Shuffle, Repeat) */
+.controls button:hover {
+    color: var(--text-main);
+    transform: translateY(-4px) scale(1.15);
+    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.4));
+}
+
+/* BOTÃO PRINCIPAL (PLAY/PAUSE) - THE CERAMIC MASTER */
+#btnPlay, #btnPause {
+    background: #ffffff;
+    color: #000;
+    width: 60px; 
+    height: 60px;
+    border-radius: 50%;
+    font-size: 24px;
+    border: none;
+    box-shadow: 
+        0 12px 25px rgba(0, 0, 0, 0.5),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.15),
+        inset 0 3px 6px rgba(255, 255, 255, 1); /* Brilho de cerâmica real */
+    transition: var(--transition-smooth);
+}
+
+#btnPlay:hover, #btnPause:hover {
+    background: var(--brand-primary);
+    color: #fff;
+    transform: scale(1.12) rotate(8deg); /* Inclinação um pouco mais "viva" */
+    box-shadow: 
+        0 15px 35px var(--brand-glow),
+        0 0 0 8px rgba(29, 185, 84, 0.15);
+    animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+/* --- BARRA DE PROGRESSO - THE SMART SEEKBAR --- */
+.progress-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 15px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace; /* Tempo em fonte técnica */
+    font-size: 11px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 5px; /* Ligeiramente mais espessa para usabilidade */
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    overflow: visible; /* Necessário para o thumb sair do limite */
+}
+
+/* Trilho preenchido */
+.progress-current {
+    width: 45%; 
+    height: 100%;
+    background: var(--brand-gradient);
+    border-radius: 10px;
+    position: relative;
+    transition: width 0.1s linear;
+}
+
+/* O "Thumb" (Pino de arraste) - Minimalismo 2026 */
+.progress-current::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.progress-bar:hover .progress-current::after {
+    transform: translateY(-50%) scale(1);
+}
+
+.progress-bar:hover .progress-current {
+    filter: brightness(1.2);
+}
+
+/* --- INDICADORES DE ESTADO (SHUFFLE/REPEAT) --- */
+.btn-active {
+    color: var(--brand-primary) !important;
+}
+
+.btn-active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--brand-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--brand-primary);
+}
+
+/* Keyframes de Energia Pulsante */
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 15px 35px rgba(29, 185, 84, 0.4), 0 0 0 8px rgba(29, 185, 84, 0.1); }
+    50% { box-shadow: 0 20px 50px rgba(29, 185, 84, 0.6), 0 0 0 15px rgba(29, 185, 84, 0.05); }
+}
+
+/* ============================================================
+   PROGRESSO & VOLUME - O ESTADO DA ARTE (REFINED 2026)
+   ============================================================ */
+
+.player-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 720px; /* Um pouco mais de presença no palco */
+    margin: 0 auto;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+    padding: 10px 20px;
+    border-radius: 50px;
+    transition: var(--transition-smooth);
+    background: transparent;
+    position: relative;
+}
+
+/* Efeito Atmosférico no Hover da Área de Controle */
+.player-center:hover .progress-container {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.01);
+}
+
+/* --- RESET & ENGENHARIA DO INPUT RANGE --- */
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    height: 20px; /* Área de clique maior para UX */
+}
+
+/* Chrome, Safari, Edge, Opera e Electron (Webkit/Blink) */
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* O Segredo do Rastro Colorido no Webkit */
+/* Nota: Para o Electron, você pode usar um gradiente dinâmico via JS no 'background' do track */
+.progress-container:hover input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 14px;
+    width: 14px;
+    background: #ffffff;
+    border-radius: 50%;
+    margin-top: -5px; /* (Track Height / 2) - (Thumb Height / 2) */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    opacity: 0; 
+    transform: scale(0.4);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 2px solid transparent;
+}
+
+/* --- INTERAÇÃO CINÉTICA --- */
+
+.progress-container:hover input[type="range"]::-webkit-slider-thumb {
+    opacity: 1;
+    transform: scale(1);
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+    transform: scale(1.3);
+    background: var(--brand-primary);
+    box-shadow: 0 0 20px var(--brand-glow);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- TIPOGRAFIA DE PRECISÃO (JETBRAINS MONO) --- */
+#currentTime, 
+#duration {
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    min-width: 50px;
+    font-variant-numeric: tabular-nums; 
+    transition: color 0.3s ease;
+}
+
+#currentTime {
+    color: var(--brand-primary);
+    filter: drop-shadow(0 0 5px rgba(29, 185, 84, 0.3));
+}
+
+/* --- SEÇÃO DE VOLUME (DIREITA) --- */
+.volume-container {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 180px;
+    justify-content: flex-end;
+    padding-right: 10px;
+}
+
+/* Estilo consistente para a barra de volume */
+.volume-container input[type="range"] {
+    width: 100px;
+}
+
+.volume-container i {
+    font-size: 18px;
+    color: var(--text-dim);
+    transition: var(--transition-smooth);
+    cursor: pointer;
+}
+
+.volume-container:hover i {
+    color: var(--brand-primary);
+    transform: scale(1.2) rotate(-5deg);
+    filter: drop-shadow(0 0 8px var(--brand-glow));
+}
+
+/* Estilo para quando o Volume está no Mudo */
+.volume-muted i {
+    color: #ff4d4d !important;
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* ============================================================
+   VOLUME SECTION - SOUND ICON & KINETIC SLIDER (2026)
+   ============================================================ */
+
+.player-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 40px;
+    gap: 14px;
+    min-width: 240px;
+    position: relative;
+    z-index: 10;
+}
+
+/* ÍCONE DE SOM REATIVO (Mantendo o Símbolo) */
+.player-right::before {
+    content: '🔊'; /* O símbolo que você quer manter */
+    font-size: 15px;
+    opacity: 0.4;
+    filter: grayscale(1) brightness(2); /* Estilo monocromático premium */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+/* Hover no ícone de som: ganha vida e cor */
+.player-right:hover::before {
+    opacity: 1;
+    filter: grayscale(0) drop-shadow(0 0 8px var(--brand-glow, rgba(29, 185, 84, 0.4)));
+    transform: scale(1.2) rotate(-5deg);
+    color: var(--brand-primary, #1db954);
+}
+
+/* SLIDER DE VOLUME - O TRILHO CINÉTICO */
+#volume {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px; 
+    height: 20px;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#volume::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+#volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 12px;
+    width: 12px;
+    background: #ffffff;
+    border-radius: 50%;
+    margin-top: -4px; /* Alinhamento óptico */
+    opacity: 0; 
+    transform: scale(0.5);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- INTERAÇÕES DE ALTO NÍVEL --- */
+
+/* O Slider "Cresce" quando você interage com a área da direita */
+.player-right:hover #volume {
+    width: 125px; 
+}
+
+.player-right:hover #volume::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.player-right:hover #volume::-webkit-slider-thumb {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Feedback de toque ativo no volume */
+#volume:active::-webkit-slider-thumb {
+    transform: scale(1.4);
+    background: var(--brand-primary, #1db954);
+    box-shadow: 0 0 15px var(--brand-glow, rgba(29, 185, 84, 0.6));
+}
+
+/* Estilo para Mudo (Caso você adicione uma classe via JS no player-right) */
+.player-right.muted::before {
+    content: '🔇';
+    opacity: 1;
+    filter: drop-shadow(0 0 5px #ff4d4d);
+}
+
+/* ============================================================
+   PLAYLIST DETAILS - THE HERO SECTION (REFINED 2026)
+   ============================================================ */
+
+.playlist-details {
+    display: flex;
+    gap: clamp(24px, 5vw, 48px);
+    align-items: flex-end;
+    margin-bottom: 40px;
+    padding: clamp(32px, 6vw, 64px);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    
+    /* Background Imersivo com Camadas de Profundidade */
+    background: linear-gradient(180deg, 
+        rgba(29, 185, 84, 0.2) 0%, 
+        rgba(10, 10, 10, 0.4) 100%
+    );
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(20px) saturate(180%);
+    
+    /* Sombra de oclusão para separar do feed */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    
+    animation: heroSlideUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Efeito de luz ambiente atrás da capa */
+.playlist-details::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    width: 50%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes heroSlideUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(40px) scale(0.98); 
+        filter: blur(15px) brightness(0.5); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+        filter: blur(0) brightness(1); 
+    }
+}
+
+#detailCapa {
+    width: clamp(190px, 22vw, 280px);
+    height: clamp(190px, 22vw, 280px);
+    object-fit: cover;
+    border-radius: 16px;
+    z-index: 1;
+    
+    /* Sombra Projetada Premium */
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    
+    transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    will-change: transform;
+}
+
+#detailCapa:hover {
+    transform: scale(1.04) translateY(-8px) rotate(-1deg);
+    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9);
+}
+
+.text-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 12px;
+    z-index: 1;
+}
+
+/* Tag Superior (PLAYLIST / ÁLBUM) */
+.text-details span {
+    font-size: 13px;
+    font-weight: 850;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #ffffff;
+    margin-bottom: 12px;
+    opacity: 0.8;
+    /* Animação individual */
+    animation: fadeInDown 0.8s 0.3s backwards;
+}
+
+.text-details h1 {
+    font-size: clamp(36px, 6vw, 82px);
+    font-weight: 950;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    
+    /* Gradiente sutil no texto para profundidade */
+    background: linear-gradient(180deg, #ffffff 40%, rgba(255, 255, 255, 0.6) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.4));
+    animation: fadeInDown 0.8s 0.4s backwards;
+}
+
+.text-details p {
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+    max-width: 650px;
+    animation: fadeInDown 0.8s 0.5s backwards;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* UTILS */
+.hidden {
+    display: none !important;
+}
+
+/* ============================================================
+   PLAYLIST ACTIONS - THE MANAGEMENT SUITE (REFINED 2026)
+   ============================================================ */
+
+.playlist-actions {
+    display: flex;
+    gap: 16px; /* Mais espaço para os dedos/cursor */
+    margin-top: 24px;
+    animation: fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 2;
+    position: relative;
+}
+
+.playlist-actions button {
+    padding: 12px 24px;
+    border-radius: 50px; 
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-main, #ffffff);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase; /* Dá um ar mais profissional/administrativo */
+    transition: var(--transition-smooth, all 0.4s ease);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.playlist-actions button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* BOTÃO DE PERIGO (DANGER ZONE) - ELEGANTE MAS ALERTA */
+.btn-danger {
+    background: rgba(255, 68, 68, 0.05) !important;
+    color: #ff5555 !important;
+    border: 1px solid rgba(255, 68, 68, 0.2) !important;
+}
+
+.btn-danger:hover {
+    background: #ff4444 !important;
+    color: #ffffff !important;
+    border-color: #ff4444 !important;
+    box-shadow: 0 12px 24px rgba(255, 68, 68, 0.4) !important;
+}
+
+/* ÍCONE DE REMOÇÃO NA LISTA (X) - O GATILHO TÉCNICO */
+.remove-from-pl {
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0;
+    color: rgba(255, 255, 255, 0.2);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* O "X" surge suavemente quando a linha (li) recebe hover */
+.main li:hover .remove-from-pl {
+    opacity: 0.5;
+}
+
+.remove-from-pl:hover {
+    opacity: 1 !important;
+    color: #ff4444;
+    transform: scale(1.25) rotate(90deg);
+    filter: drop-shadow(0 0 8px rgba(255, 68, 68, 0.4));
+}
+
+/* Feedback tátil ao clicar */
+.remove-from-pl:active {
+    transform: scale(0.9) rotate(180deg);
+    filter: brightness(1.2);
+    transition: all 0.2s ease;
+}
+
+/* Tooltip Contextual Estilizado */
+.remove-from-pl[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 120%;
+    right: 0;
+    background: rgba(20, 20, 20, 0.95);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* ============================================================
+   FLOATING CONTEXT MENU - THE OVERLAY (REFINED 2026)
+   ============================================================ */
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+}
+
+/* GATILHO: O ÍCONE "+" DE ADIÇÃO */
+.add-to-pl {
+    cursor: pointer;
+    opacity: 0.3;
+    font-size: 16px;
+    color: var(--text-main, #ffffff);
+    transition: var(--transition-smooth, all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-to-pl:hover {
+    opacity: 1;
+    color: var(--brand-primary, #1db954);
+    transform: scale(1.3) rotate(90deg); /* Rotação técnica para indicar expansão */
+    filter: drop-shadow(0 0 8px var(--brand-glow));
+}
+
+/* O MENU FLUTUANTE - VIDRO DE ALTA DENSIDADE */
+.playlist-menu {
+    position: fixed;
+    background: rgba(15, 15, 15, 0.85); /* Tom mais profundo para contraste */
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 10px;
+    z-index: 9999;
+    min-width: 220px;
+    
+    /* Sombra de Elevação Nível 3 */
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+        
+    animation: menuEntrance 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-origin: top right; /* Anima a partir do canto superior */
+}
+
+/* CABEÇALHO DO MENU (SECTION LABEL) */
+.playlist-menu p {
+    font-size: 10px;
+    color: var(--text-dim, rgba(255, 255, 255, 0.4));
+    margin: 8px 0 12px 12px;
+    text-transform: uppercase;
+    font-weight: 850;
+    letter-spacing: 2px;
+    pointer-events: none;
+}
+
+/* ITENS DO MENU - KINETIC FEEDBACK */
+.menu-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item:hover {
+    background: var(--brand-primary, #1db954);
+    color: #000000;
+    font-weight: 800;
+    transform: translateX(6px); /* Deslizamento lateral mais nítido */
+    box-shadow: 0 8px 20px rgba(29, 185, 84, 0.25);
+}
+
+/* Ícone de Adição no Menu */
+.menu-item::before {
+    content: '＋'; 
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.4;
+    transition: all 0.2s ease;
+}
+
+.menu-item:hover::before {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Feedback de Clique (Active State) */
+.menu-item:active {
+    transform: translateX(2px) scale(0.97);
+    filter: brightness(0.9);
+}
+
+/* ANIMAÇÃO DE ENTRADA CINEMÁTICA */
+@keyframes menuEntrance {
+    from { 
+        opacity: 0; 
+        transform: scale(0.9) translateY(-15px); 
+        filter: blur(10px) brightness(0.5);
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+        filter: blur(0) brightness(1);
+    }
+}
+
+/* ============================================================
+   POPUPS & MODAIS - PREMIUM GLASS EDITION (REFINED 2026)
+   ============================================================ */
+
+.popup {
+    position: fixed;
+    inset: 0; 
+    background: rgba(0, 0, 0, 0.5); /* Um pouco mais de contraste para foco total */
+    backdrop-filter: blur(18px) saturate(180%) brightness(0.6); 
+    -webkit-backdrop-filter: blur(18px) saturate(180%) brightness(0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: all 0.4s var(--transition-smooth);
+}
+
+.popup-content {
+    background: linear-gradient(
+        145deg, 
+        rgba(35, 35, 35, 0.8) 0%, 
+        rgba(20, 20, 20, 0.9) 100%
+    );
+    backdrop-filter: blur(35px);
+    -webkit-backdrop-filter: blur(35px);
+    padding: clamp(32px, 6vw, 45px);
+    border-radius: 32px; 
+    width: 100%;
+    max-width: 460px;
+    
+    /* Borda Tripla: Brilho Superior, Contorno Geral e Sombra */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 40px 120px rgba(0, 0, 0, 0.85),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1); /* Luz de borda interna */
+    
+    animation: modalSpring 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+@keyframes modalSpring {
+    0% { 
+        opacity: 0; 
+        transform: scale(0.85) translateY(40px); 
+        filter: blur(15px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+        filter: blur(0); 
+    }
+}
+
+.popup-content h2 { 
+    margin-top: 0;
+    margin-bottom: 32px;
+    font-size: 30px;
+    font-weight: 950; /* Ultra Black */
+    letter-spacing: -0.05em;
+    color: #ffffff;
+    text-align: center;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+}
+
+/* INPUTS COM EFEITO DE CAVIDADE TÉCNICA */
+.popup-content input, 
+.popup-content textarea {
+    width: 100%;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Sombra interna para profundidade de "corte" no vidro */
+    box-shadow: 
+        inset 0 2px 8px rgba(0, 0, 0, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.popup-content input:focus, 
+.popup-content textarea:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: var(--brand-primary);
+    box-shadow: 
+        0 0 0 4px rgba(29, 185, 84, 0.12),
+        inset 0 2px 10px rgba(0, 0, 0, 0.5);
+    transform: translateY(-1px);
+}
+
+/* BOTÕES DE AÇÃO - THE FINAL CALL */
+.popup-buttons {
+    display: flex;
+    gap: 16px;
+    margin-top: 15px;
+}
+
+.popup-buttons button {
+    flex: 1;
+    padding: 16px 30px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+#cancelar { 
+    background: rgba(255, 255, 255, 0.03); 
+    color: rgba(255, 255, 255, 0.4); 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#cancelar:hover { 
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+#criar { 
+    background: var(--brand-primary); 
+    color: #000000;
+    border: none;
+    box-shadow: 0 12px 30px rgba(29, 185, 84, 0.3);
+}
+
+#criar:hover { 
+    background: #1ed760;
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 18px 40px rgba(29, 185, 84, 0.5);
+}
+
+/* Feedback de clique "Heavy" */
+#criar:active {
+    transform: translateY(-1px) scale(0.97);
+    box-shadow: 0 5px 15px rgba(29, 185, 84, 0.4);
+}
+
+/* UTILS */
+.hidden { 
+    display: none !important; 
+}
+
+/* ============================================================
+   SCROLLBAR - GHOST MINIMALIST (NATIVE OS FEEL 2026)
+   ============================================================ */
+
+/* Configuração da Calha (Webkit/Electron) */
+::-webkit-scrollbar {
+    width: 10px; /* Um pouco mais de área de clique para UX */
+    height: 10px; /* Scroll horizontal caso necessário */
+}
+
+/* Fundo da trilha - Mantido transparente para o vidro brilhar */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* O "Thumb" (Puxador) - Efeito Ghost */
+::-webkit-scrollbar-thumb {
+    /* Cor ultra-suave por padrão para não poluir o visual */
+    background-color: rgba(255, 255, 255, 0.08); 
+    
+    /* O SEGREDO: Border transparente + content-box cria o "respiro" lateral */
+    border: 3px solid transparent;
+    background-clip: content-box;
+    
+    border-radius: 20px;
+    transition: background 0.4s ease, border-width 0.3s ease;
+}
+
+/* Interação Ativa: A barra "acorda" no Hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--brand-primary, #1db954);
+    background-clip: content-box;
+    /* Brilho sutil para indicar que é um elemento clicável */
+    box-shadow: 0 0 12px var(--brand-glow, rgba(29, 185, 84, 0.3));
+    /* Engrossa ligeiramente a barra no hover para facilitar o arraste */
+    border-width: 2px; 
+}
+
+/* Arraste Ativo: Feedback de Pressão */
+::-webkit-scrollbar-thumb:active {
+    background-color: #1ed760;
+    background-clip: content-box;
+    transform: scaleX(1.2); /* Efeito visual de compressão */
+}
+
+/* Esconder scrollbars em elementos específicos se necessário */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- SUPORTE CROSS-PLATFORM --- */
+
+/* Firefox Moderno */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+/* Estilização para o seletor de texto (Bonus 2026) */
+::selection {
+    background: var(--brand-primary, #1db954);
+    color: #000;
+}
+
+/* ============================================================
+   SIDEBAR BRAND BADGE - COMPACT EDITION
+   ============================================================ */
+
+/* Ajuste no container da logo para empilhar os itens verticalmente */
+.brand-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza logo, nome e badge */
+    gap: 8px;
+    padding: 20px 10px;
+}
+
+/* O Header dentro da Sidebar precisa ser compacto */
+.main-header-info {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.dev-badge {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap; /* Impede que o nome quebre em duas linhas */
+    transition: all 0.3s ease;
+}
+
+.dev-badge:hover {
+    background: rgba(29, 185, 84, 0.1); /* Brilho verde suave */
+    border-color: rgba(29, 185, 84, 0.3);
+}
+
+.dev-badge span {
+    font-size: 9px; /* Menor para caber na sidebar */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.dev-badge .version {
+    color: var(--brand-primary, #1db954);
+}
+
+.dev-badge .author {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.dev-badge .dot, .dev-badge .year {
+    display: inline-block; /* Garante alinhamento */
+}
