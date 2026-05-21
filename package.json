@@ -1,6 +1,7 @@
 {
   "name": "mymusics",
   "version": "1.0.0",
+<<<<<<< HEAD
   "description": "Player Musical Desktop",
   "main": "main.js",
   "scripts": {
@@ -33,3 +34,20 @@
     }
   }
 }
+=======
+  "description": "Player de música desktop",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Marcos Simionatto",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^30.0.0",
+    "music-metadata": "^7.14.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^26.8.1"
+  }
+}
+>>>>>>> 6309e7666f6784ec1fe6d5a5a1307b7a11e5d38a
