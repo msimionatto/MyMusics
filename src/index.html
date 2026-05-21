@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYMusics</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <!-- Clique na logo agora volta para a Home -->
+            <div class="brand" id="brandBtn" style="cursor: pointer;">
+                <img src="../assets/Logo.png" alt="MYMusics Logo" class="logo">
+                <h1>MYMusics</h1>
+            </div>
+
+            <nav class="nav-menu">
+                <button id="homeBtn" class="nav-btn active">
+                    <span class="icon">🏠</span> Home
+                </button>
+
+                <button id="favoritesBtn" class="nav-btn">
+                    <span class="icon">⭐</span> Favoritos
+                </button>
+
+                <button id="addMusicBtn" class="nav-btn">
+                    <span class="icon">+</span> Adicionar Músicas
+                </button>
+
+                <button id="createPlaylistBtn" class="nav-btn">
+                    <span class="icon">+</span> Criar Playlist
+                </button>
+            </nav>
+
+            <!-- Busca de Playlists na Sidebar -->
+            <div class="search-container">
+                <input type="text" id="searchPlaylist" placeholder="Buscar playlists...">
+            </div>
+
+            <div class="playlist-area">
+                <div class="playlist-header">
+                    <h3>Sua Biblioteca</h3>
+                </div>
+                <ul id="playlistList">
+                    <!-- Gerado dinamicamente pelo renderer.js -->
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="sidebar-footer">
+            <span>MYMusics © 2026</span>
+        </div>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="header" id="mainHeader">
+            
+            <div class="header-nav-controls">
+                <button id="backBtn" class="circle-btn" title="Voltar">❮</button>
+                <button id="editPlaylistBtn" class="circle-btn" title="Editar Playlist" style="display:none;">✎</button>
+                
+                <!-- NOVO: Campo de busca de músicas na área principal -->
+                <div class="music-search-box">
+                    <input type="text" id="searchMusic" placeholder="Buscar músicas na lista...">
+                </div>
+            </div>
+
+            <div class="header-info-container">
+                <div class="playlist-cover-wrapper">
+                    <img id="mainDisplayLogo" src="../assets/Logo.png" alt="Capa" class="main-display-logo">
+                </div>
+                
+                <div class="header-text">
+                    <h2 id="mainTitle">Sua Biblioteca</h2>
+                    <p id="mainSubtitle">Todas as músicas adicionadas aparecerão aqui</p>
+                </div>
+            </div>
+
+        </header>
+
+        <section class="music-container" id="musicContainer">
+            <!-- Cards de música ou Empty State inseridos aqui pelo JS -->
+        </section>
+
+        <footer class="player-bar">
+
+            <div class="player-left">
+                <div class="player-cover" id="playerCover"></div>
+                <div class="player-info">
+                    <h4 id="currentMusic">Nenhuma música tocando</h4>
+                    <span id="currentArtist">MYMusics Player</span>
+                </div>
+            </div>
+
+            <div class="player-center">
+                <div class="player-controls">
+                    <button id="shuffleBtn" class="btn-icon">🔀</button>
+                    <button id="prevBtn" class="btn-icon">⏮</button>
+                    <button id="playPauseBtn" class="btn-play">▶</button>
+                    <button id="nextBtn" class="btn-icon">⏭</button>
+                    <button id="repeatBtn" class="btn-icon">🔁</button>
+                </div>
+
+                <div class="progress-area">
+                    <span id="currentTime">0:00</span>
+                    <input type="range" id="progressBar" min="0" max="100" value="0">
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+
+            <div class="player-right">
+                <!-- Adicionado o botão para abrir/fechar o Equalizador ao lado do volume -->
+                <button id="toggleEqBtn" class="btn-icon" title="Equalizador de Áudio">🎛️</button>
+                <span class="volume-icon">🔊</span>
+                <input type="range" id="volumeBar" min="0" max="1" step="0.01" value="1">
+            </div>
+
+            <audio id="audioPlayer" crossorigin="anonymous"></audio>
+
+        </footer>
+
+        <!-- NOVO: Painel Gaveta do Equalizador (Fica posicionado logo abaixo do footer) -->
+        <div class="equalizer-drawer" id="equalizerDrawer">
+            <div class="eq-container">
+                <div class="eq-header">
+                    <span>Equalizador Profissional</span>
+                    <select id="eqPreset" class="eq-select">
+                        <option value="flat">Padrão (Flat)</option>
+                        <option value="bass">Super Grave</option>
+                        <option value="pop">Pop</option>
+                        <option value="rock">Rock/Metal</option>
+                        <option value="vocal">Foco em Voz</option>
+                    </select>
+                </div>
+                
+                <div class="eq-sliders">
+                    <!-- 60Hz: Graves Profundos -->
+                    <div class="eq-slider-group">
+                        <input type="range" class="eq-slider" data-frequency="60" min="-12" max="12" step="1" value="0">
+                        <label>60Hz</label>
+                    </div>
+                    <!-- 230Hz: Corpo do som / Baixo -->
+                    <div class="eq-slider-group">
+                        <input type="range" class="eq-slider" data-frequency="230" min="-12" max="12" step="1" value="0">
+                        <label>230Hz</label>
+                    </div>
+                    <!-- 910Hz: Médios / Guitarras e Vocais -->
+                    <div class="eq-slider-group">
+                        <input type="range" class="eq-slider" data-frequency="910" min="-12" max="12" step="1" value="0">
+                        <label>910Hz</label>
+                    </div>
+                    <!-- 4kHz: Presença e Clareza -->
+                    <div class="eq-slider-group">
+                        <input type="range" class="eq-slider" data-frequency="4000" min="-12" max="12" step="1" value="0">
+                        <label>4kHz</label>
+                    </div>
+                    <!-- 14kHz: Brilho / Agudos Freqüentes -->
+                    <div class="eq-slider-group">
+                        <input type="range" class="eq-slider" data-frequency="14000" min="-12" max="12" step="1" value="0">
+                        <label>14kHz</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- NOVO: Sidebar de Letras & Artista (Direita Contraposta) -->
+    <aside class="lyrics-sidebar" id="lyricsSidebar">
+        <button class="toggle-lyrics-btn" id="toggleLyricsBtn" title="Alternar Letras">🎤</button>
+
+        <div class="lyrics-artist-info">
+            <img src="../assets/Logo.png" class="lyrics-artist-thumb" id="lyricArtistThumb" alt="Artista">
+            <div class="lyrics-meta">
+                <h3 id="lyricTrackName">Nenhuma música</h3>
+                <p id="lyricArtistName">Artista Criador</p>
+            </div>
+        </div>
+
+        <div class="lyrics-scroller" id="lyricsScroller">
+            <p class="lyric-line active">Aproveite o som premium...</p>
+            <p class="lyric-line">As letras sincronizadas</p>
+            <p class="lyric-line">aparecerão aqui</p>
+            <p class="lyric-line">conforme o ritmo da música.</p>
+        </div>
+    </aside>
+
+    <!-- Modal de Playlists -->
+    <div class="modal" id="playlistModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Configurações da Playlist</h2>
+
+            <div class="modal-body">
+                <input type="text" id="playlistName" placeholder="Nome da playlist">
+                <textarea id="playlistDesc" placeholder="Descrição da playlist"></textarea>
+                
+                <label for="playlistImage">Capa da Playlist</label>
+                <input type="file" id="playlistImage" accept="image/*">
+            </div>
+
+            <div class="modal-actions">
+                <button id="savePlaylist" class="btn-save">Salvar Alterações</button>
+                <button id="cancelPlaylist" class="btn-cancel">Cancelar</button>
+            </div>
+
+            <button id="deletePlaylist" class="btn-danger" style="display: none;">Excluir Playlist</button>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+
+</body>
+
+</html>
